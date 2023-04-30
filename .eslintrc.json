@@ -1,0 +1,38 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2022,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "@typescript-eslint/naming-convention": "warn",
+        "@typescript-eslint/semi": "off",
+        "@typescript-eslint/max-len": "off",
+        "comma-dangle": [
+            0,
+            "never"
+        ],
+        "max-len": [
+            "warn",
+            {
+                "code": 130
+            }
+        ],
+        "curly": "off",
+        "eqeqeq": "warn",
+        "no-throw-literal": "warn",
+        "semi": [
+            "error",
+            "never"
+        ]
+    },
+    "ignorePatterns": [
+        "out",
+        "dist",
+        "**/*.d.ts"
+    ]
+}
