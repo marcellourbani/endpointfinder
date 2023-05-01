@@ -1,7 +1,7 @@
 # Endpoint Finder
 
 Quickly jump from an http endpoint to the code handling it. Only for nodejs applications using [tsoa](https://tsoa-community.github.io/docs/)
-[endpointfinder.webm](https://user-images.githubusercontent.com/2453277/235520065-a63cbb31-232e-42c3-b583-781baef413cf.webm)
+![anim](https://user-images.githubusercontent.com/2453277/235520065-a63cbb31-232e-42c3-b583-781baef413cf.webm)
 
 ## Features
 

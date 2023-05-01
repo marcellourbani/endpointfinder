@@ -1,6 +1,6 @@
 {
   "name": "endpointfinder",
-  "displayName": "endpointfinder",
+  "displayName": "Endpoint finder",
   "description": "Connects endpoints to implementation",
   "repository": {
     "type": "git",
@@ -14,7 +14,9 @@
   },
   "keywords": [
     "tsoa",
-    "rest"
+    "rest",
+    "jump",
+    "endpoint"
   ],
   "categories": [
     "Other"
