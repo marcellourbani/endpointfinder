@@ -75,3 +75,7 @@ export const find = async (method?: string, path?: string) => {
     window.showErrorMessage(`${error}`)
   }
 }
+export const reload = () => {
+  Main.clear()
+  window.withProgress({ location: ProgressLocation.Window, title: "initializing endpoint list" }, () => Main.get())
+}

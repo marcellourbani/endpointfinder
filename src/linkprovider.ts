@@ -1,4 +1,4 @@
-import { CancellationToken, TerminalLink, TerminalLinkContext, TerminalLinkProvider, window } from "vscode"
+import { TerminalLink, TerminalLinkContext, TerminalLinkProvider, window } from "vscode"
 import { SplitResult, splitCall } from "./logic"
 import { findPath, loadEndpointsIfNeeded } from "./find"
 

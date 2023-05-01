@@ -28,6 +28,10 @@
       {
         "command": "endpointfinder.find",
         "title": "Find endpoint"
+      },
+      {
+        "command": "endpointfinder.reload",
+        "title": "Refresh endpoint list"
       }
     ]
   },

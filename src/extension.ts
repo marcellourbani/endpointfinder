@@ -1,5 +1,5 @@
 import { Disposable, ExtensionContext, commands } from "vscode"
-import { find } from "./find"
+import { find, reload } from "./find"
 import { registerCodeLens } from "./lens"
 import { registerLinkProvider } from "./linkprovider"
 
@@ -8,6 +8,7 @@ export function activate(context: ExtensionContext) {
   const pd = (d: Disposable) => context.subscriptions.push(d)
 
   pd(commands.registerCommand("endpointfinder.find", find))
+  pd(commands.registerCommand("endpointfinder.reload", reload))
   pd(registerCodeLens())
   pd(registerLinkProvider())
 }

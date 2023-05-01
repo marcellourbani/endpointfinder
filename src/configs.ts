@@ -6,6 +6,7 @@ import { Implementer, convertController, extractPaths, matchPath } from "./logic
 
 const loadMetadata = (c: Config, path: string) => {
   const { entryFile, ignore, controllerPathGlobs, spec, compilerOptions = {} } = c
+  if (!entryFile) throw new Error(`No entryfile provided in tsoa.json`)
   const prevdir = process.cwd()
   try {
     process.chdir(path)
@@ -13,8 +14,8 @@ const loadMetadata = (c: Config, path: string) => {
       entryFile,
       compilerOptions as Record<string, string>,
       ignore,
-      controllerPathGlobs,
-      spec.rootSecurity
+      controllerPathGlobs || ["**/*Controller.ts"],
+      spec?.rootSecurity || []
     ).Generate()
   } finally {
     console.log("cleanup")
@@ -29,6 +30,9 @@ const lazy =
 
 const exists = (u: Uri) => workspace.fs.stat(u).then(lazy(true), lazy(false))
 export class Searchable {
+  dispose(): void {
+    this.watchers.forEach(w => w.dispose())
+  }
   private watchers: FileSystemWatcher[] = []
   private implementers: Implementer[] = []
   getImplementers() {
@@ -64,7 +68,7 @@ export class Searchable {
 
 export class Main {
   private constructor() {}
-  private static instance: Main
+  private static instance: Main | undefined
   private configs = new Map<string, Searchable>()
   private implementers() {
     return [...this.configs.values()].flatMap(c => c.getImplementers())
@@ -90,11 +94,15 @@ export class Main {
   }
 
   public static async get(): Promise<Main> {
-    if (!this.instance) {
-      this.instance = new Main()
-      await this.instance.initialize()
+    if (!Main.instance) {
+      Main.instance = new Main()
+      await Main.instance.initialize()
     }
-    return this.instance
+    return Main.instance
+  }
+  public static async clear() {
+    if (Main.instance) [...Main.instance.configs.values()].forEach(i => i.dispose())
+    Main.instance = undefined
   }
   private async initialize() {
     for (const w of workspace.workspaceFolders || []) {
