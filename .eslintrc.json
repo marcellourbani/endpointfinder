@@ -12,6 +12,10 @@
         "@typescript-eslint/naming-convention": "warn",
         "@typescript-eslint/semi": "off",
         "@typescript-eslint/max-len": "off",
+        "arrow-parens": [
+            "warn",
+            "as-needed"
+        ],
         "comma-dangle": [
             0,
             "never"

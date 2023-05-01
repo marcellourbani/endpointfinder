@@ -1,12 +1,13 @@
-import * as vscode from "vscode"
+import { Disposable, ExtensionContext, commands } from "vscode"
 import { find } from "./find"
+import { registerCodeLens } from "./lens"
+import { registerLinkProvider } from "./linkprovider"
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: ExtensionContext) {
   console.log("endpointfinder is now active!")
-  const pd = (d: vscode.Disposable) => context.subscriptions.push(d)
+  const pd = (d: Disposable) => context.subscriptions.push(d)
 
-  pd(vscode.commands.registerCommand("endpointfinder.find", find))
+  pd(commands.registerCommand("endpointfinder.find", find))
+  pd(registerCodeLens())
+  pd(registerLinkProvider())
 }
-
-// This method is called when your extension is deactivated
-export function deactivate() {}
