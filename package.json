@@ -1,6 +1,6 @@
 {
   "name": "endpointfinder",
-  "displayName": "endpointfinder",
+  "displayName": "Endpoint finder",
   "description": "Connects endpoints to implementation",
   "repository": {
     "type": "git",
@@ -14,7 +14,9 @@
   },
   "keywords": [
     "tsoa",
-    "rest"
+    "rest",
+    "jump",
+    "endpoint"
   ],
   "categories": [
     "Other"
@@ -36,9 +38,12 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run addts;npm run esbuild-base -- --minify",
+    "addts": "mkdir out;cp node_modules/typescript/lib/*.ts out/",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "compile": "npm run esbuild-base -- --sourcemap",
+    "watch-esbuild": "npm run esbuild-base -- --sourcemap --watch",
+    "watch-ts": "npm run addts;tsc -watch --noEmit -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts"
   },
@@ -55,7 +60,8 @@
     "ts-jest": "^29.1.0"
   },
   "dependencies": {
-    "@tsoa/cli": "^5.1.1",
-    "@tsoa/runtime": "^5.0.0"
+    "@tsoa/cli": "5.1.1",
+    "@tsoa/runtime": "5.0.0",
+    "typescript": "4.9.5"
   }
 }

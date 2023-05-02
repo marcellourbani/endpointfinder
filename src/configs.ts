@@ -3,20 +3,21 @@ import { Config } from "@tsoa/runtime"
 import { join } from "path"
 import { FileSystemWatcher, Uri, workspace } from "vscode"
 import { Implementer, convertController, extractPaths, matchPath } from "./logic"
-
+import { CompilerOptions } from "typescript"
 const loadMetadata = (c: Config, path: string) => {
   const { entryFile, ignore, controllerPathGlobs, spec, compilerOptions = {} } = c
   if (!entryFile) throw new Error(`No entryfile provided in tsoa.json`)
   const prevdir = process.cwd()
   try {
     process.chdir(path)
-    return new MetadataGenerator(
+    const gen = new MetadataGenerator(
       entryFile,
-      compilerOptions as Record<string, string>,
+      compilerOptions as CompilerOptions | undefined,
       ignore,
       controllerPathGlobs || ["**/*Controller.ts"],
       spec?.rootSecurity || []
-    ).Generate()
+    )
+    return gen.Generate()
   } finally {
     console.log("cleanup")
     process.chdir(prevdir)
