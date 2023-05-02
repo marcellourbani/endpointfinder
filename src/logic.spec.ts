@@ -99,6 +99,7 @@ test("match path simple", () => {
   expect(matchPath("/bar", template)).toBe(false)
   expect(matchPath("bar", template)).toBe(false)
   expect(matchPath("/api/foo/bar", template)).toBe(true)
+  expect(matchPath("/api/foo/bar/", template)).toBe(true)
   expect(matchPath("/foo/bar", template)).toBe(true)
   expect(matchPath("api/foo/bar", template)).toBe(true)
   expect(matchPath("foo/bar", template)).toBe(true)
@@ -125,7 +126,7 @@ test("match multiple path variables", () => {
 test("simple split", () => {
   expect(splitCall("/")).toStrictEqual({
     method: "get",
-    path: "/",
+    path: "",
     col: 0,
     length: 1
   })
@@ -149,10 +150,37 @@ test("simple split", () => {
   })
 })
 
+test("slast at end", () => {
+  expect(splitCall("http://foo/")).toStrictEqual({
+    method: "get",
+    path: "",
+    col: 0,
+    length: 11
+  })
+  expect(splitCall("http://foo.com/foo/bar/")).toStrictEqual({
+    method: "get",
+    path: "/foo/bar",
+    col: 0,
+    length: 23
+  })
+  expect(splitCall("POST http://foo.com/foo/bar/")).toStrictEqual({
+    method: "post",
+    path: "/foo/bar",
+    col: 0,
+    length: 28
+  })
+  expect(splitCall("post http://foo.com/foo/bar/?a=1 http 1.1")).toStrictEqual({
+    method: "post",
+    path: "/foo/bar",
+    col: 0,
+    length: 28
+  })
+})
+
 test("protocol", () => {
   expect(splitCall("http://foo/")).toStrictEqual({
     method: "get",
-    path: "/",
+    path: "",
     col: 0,
     length: 11
   })
@@ -179,7 +207,7 @@ test("protocol", () => {
 test("variable", () => {
   expect(splitCall("{{whatever}}/")).toStrictEqual({
     method: "get",
-    path: "/",
+    path: "",
     col: 0,
     length: 13
   })
@@ -206,7 +234,7 @@ test("variable", () => {
 test("complete", () => {
   expect(splitCall("http://{{whatever}}/")).toStrictEqual({
     method: "get",
-    path: "/",
+    path: "",
     col: 0,
     length: 20
   })
@@ -252,7 +280,7 @@ bar`
     },
     {
       method: "get",
-      path: "/bar/foo/",
+      path: "/bar/foo",
       line: 4
     },
     {

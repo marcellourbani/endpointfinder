@@ -43,10 +43,15 @@ export const convertController = (controller: Tsoa.Controller): Controller => {
 export const convert = (metadata: Tsoa.Metadata) => {
   metadata.controllers.map(convertController)
 }
-
+const removeFinalEmpties = (a: string[]) => {
+  while (a.length && !a[a.length - 1]) a = a.slice(0, a.length - 1)
+  return a
+}
 export const extractPaths = (workspace: string, base: string, controller: Controller): Implementer[] => {
+  const genPath = (p: string) => join(base, controller.path, p).replace(/^\//, "").replace(/\/+$/, "").split("/")
+
   return controller.methods.flatMap(met => ({
-    path: join(base, controller.path, met.path).replace(/^\//, "").split("/"),
+    path: genPath(met.path),
     httpMethod: met.httpMethod,
     workspace,
     className: controller.className,
@@ -68,7 +73,7 @@ export const findInCode = (source: string, className: string, methodName: string
 
 export const matchPath = (path: string, template: string[]) => {
   path = path.replace(/^\w+:\/\/[^\/]*/i, "").replace(/^\//, "")
-  const parts = path.split("/")
+  const parts = removeFinalEmpties(path.split("/"))
   const addFirst = parts.length && parts.length === template.length - 1
   const relevantparts = addFirst ? [template[0], ...parts] : parts
   if (relevantparts.length === 0 || relevantparts.length !== template.length) return false
@@ -87,7 +92,7 @@ export const splitCall = (text: string, forTerm = false): SplitResult | undefine
   if (!match?.[2]) return
   return {
     method: match[1]?.toLowerCase() || "get",
-    path: match[2],
+    path: match[2].replace(/\/$/, ""),
     col: match.index || 0,
     length: match[0].length
   }
